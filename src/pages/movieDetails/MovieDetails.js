@@ -2,13 +2,20 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./movieDetails.scss";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
-import actorImage from "../../images/actor.svg";
 import youtube from "../../images/youtube.svg";
 
+import starImage from "../../images/star.svg";
+
 const MovieDetails = (props) => {
+  const [hover, setHover] = useState(null);
+  let onHover = (id) => {
+    setHover(id);
+  };
+
+  let onOut = () => {
+    setHover(null);
+  };
+
   const [details, setDetails] = useState({
     poster: "",
     title: "",
@@ -22,7 +29,6 @@ const MovieDetails = (props) => {
 
   const [similarMovies, setSimilarMovies] = useState([]);
   const [movieVideos, setMovieVideos] = useState([]);
-  const [movieCast, setMovieCast] = useState([]);
 
   let movieId = props.match.params.id;
 
@@ -56,6 +62,7 @@ const MovieDetails = (props) => {
         `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`
       )
       .then((res) => {
+        console.log("similar", res.data.results);
         setSimilarMovies(res.data.results);
       })
       .catch((err) => console.log(err));
@@ -75,72 +82,19 @@ const MovieDetails = (props) => {
       });
   };
 
-  const getMovieCast = () => {
-    axios
-      .get(
-        `
-    https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`
-      )
-      .then((res) => {
-        setMovieCast(res.data.cast);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   useEffect(() => {
     getMovieDetails();
     getSimilarMovies();
     getMovieVideos();
-    getMovieCast();
   }, [props.match.params.id]);
 
-  var settings = {
-    arrows: false,
-    dots: false,
-    infinite: true,
-    autoplay: true,
-    autoplaySpeed: 1000,
-    speed: 1000,
-    draggable: true,
-    slidesToShow: 12,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 6,
-          slidesToScroll: 3,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 4,
-          slidesToScroll: 2,
-          initialSlide: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
-
   return (
-    <div className="MovieDetails container">
+    <div className="MovieDetails container pt-5">
       <div className="row">
-        <div className="col-12 col-sm-4 col-md-3 poster">
+        <div className="col-12 col-sm-4 col-lg-3 pb-5 poster">
           <img src={`https://image.tmdb.org/t/p/w1280${details.poster}`} />
         </div>
-        <div className="col-12 col-sm-8 col-md-6">
+        <div className="col-12 col-sm-8 col-lg-6 pb-5">
           <h1>{details.title}</h1>
           <br />
           <h5 className="year">{details.releaseDate.slice(0, 4)}</h5>
@@ -185,13 +139,19 @@ const MovieDetails = (props) => {
             </button>
           ))}
         </div>
-        <div className="col-12 col-md-3 similar">
+        <div className="col-12 col-lg-3 pb-5 similar ">
           <h5>Similar Movies</h5>
           <div className="row">
             {similarMovies.slice(0, 4).map((movie) => (
-              <div className="col-6 col-sm-3 col-md-6" key={movie.id}>
+              <div
+                className="col-6 col-sm-3 col-lg-6 p-2"
+                key={movie.id}
+                onMouseOver={() => onHover(movie.id)}
+                onMouseOut={onOut}
+              >
                 <Link to={`/movie/${movie.id}`}>
                   <img
+                    className={hover === movie.id ? ` filter` : ``}
                     src={`https://image.tmdb.org/t/p/w1280${movie.poster_path}`}
                     style={{ width: "100%" }}
                     alt=""
@@ -201,24 +161,6 @@ const MovieDetails = (props) => {
             ))}
           </div>
         </div>
-      </div>
-      <div className="cast">
-        <h2>Cast</h2>
-        <Slider {...settings}>
-          {movieCast.slice(0, 20).map((actor) => (
-            <div className="actor" key={actor.id}>
-              <img
-                src={
-                  actor.profile_path
-                    ? `https://image.tmdb.org/t/p/w1280${actor.profile_path}`
-                    : `${actorImage}`
-                }
-                alt=""
-              />
-              <p>{actor.name}</p>
-            </div>
-          ))}
-        </Slider>
       </div>
     </div>
   );
