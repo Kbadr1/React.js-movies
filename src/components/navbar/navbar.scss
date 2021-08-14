@@ -1,0 +1,51 @@
+.Navbar {
+  .navbar{
+    background-color: #082032 !important;
+    .navbar-brand{
+      color: #FF4C29;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .nav-link {
+      color: white;
+      font-weight: 500;
+      &:hover{
+        color: #FF4C29;
+      }
+      &:focus{
+        color: #FF4C29;
+      }
+    }
+
+    .active-page{
+      color: #FF4C29;
+    }
+
+    form {
+      input {
+        border-radius: 5px 0px 0px 5px;
+        border-color: #334756;
+        background-color: #082032;
+        color: white;
+        padding-top: 3px;
+        padding-bottom: 3px;
+        font-weight: 300;
+        &:focus{
+          box-shadow: none;
+        }
+      }
+      button{
+        border-width: 1px 1px 1px 0px;
+        border-color: #FF4C29;
+        border-radius: 0px 5px 5px 0px;
+        background-color: #FF4C29;
+        &:focus{
+          box-shadow: none;
+        }
+        img{
+          width: 15px
+        }
+      }
+    }
+  }
+}
