@@ -18,6 +18,7 @@ function App() {
           <Navbar />
           <Switch>
             <Route exact path="/" component={Discover} />
+            <Route path="/React.js-movies" component={Discover} />
             <Route path="/popular" component={Popular} />
             <Route path="/top-rated" component={TopRated} />
             <Route path="/upcoming" component={Upcoming} />
