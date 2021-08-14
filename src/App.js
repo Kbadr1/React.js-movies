@@ -12,7 +12,7 @@ import Search from "./pages/search/Search";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <SearchContextProvider>
         <div className="App">
           <Navbar />
